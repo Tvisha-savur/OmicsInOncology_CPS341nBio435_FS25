@@ -335,34 +335,6 @@ sample.
 
 ```{r}
 
-print(sig_il_genes)
-# Load required libraries
-library(pheatmap)
-library(dplyr)
-library(tidyr)
-
-# Filter the expression data for the top 10 significant proteins
-heatmap_data <- PDdata %>%
-  filter(Gene_name %in% sig_il_genes) %>%  # Use predefined top 10 proteins
-  select(Sample_ID, Gene_name, Expression) %>%
-  spread(Gene_name, Expression)  # Convert to wide format
-
-# Set Sample_ID as row names and remove the column
-rownames(heatmap_data) <- heatmap_data$Sample_ID
-heatmap_data <- heatmap_data[, -1]
-
-# Create the heatmap
-pheatmap(
-  heatmap_data, 
-  scale = "row",  # Normalize each row
-  clustering_distance_rows = "euclidean",
-  clustering_distance_cols = "euclidean",
-  clustering_method = "complete",
-  annotation_col = data.frame(Response = PDdata$Response),  # Add response annotation
-  show_rownames = FALSE, 
-  color = colorRampPalette(c("blue", "white", "red"))(100)
-)
-
 ```
 
 # Network analysis
@@ -384,7 +356,7 @@ with just the names of the proteins. The dplyr `pull` and `slice`
 functions can be helpful here.
 
 ```{r}
-
+head(t_tests %>% select(Gene_name, p_value, fold_change), 1000)
 ```
 
 Go to the string-db.org site, and upload the top1000.txt file to the
