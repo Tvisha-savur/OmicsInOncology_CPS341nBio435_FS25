@@ -432,20 +432,7 @@ a subset.
 
 ```{r}
 
-# Step 1: Read the list of 310 protein names
-protein_list <- read.delim("Grp6_clusterIDsFromCluster3.txt", header = FALSE)
 
-# Rename column for clarity (assuming there's one column)
-colnames(protein_list) <- c("Gene_name")
-
-# Step 2: Filter t_tests dataframe to keep only the proteins in the list
-filtered_t_tests <- t_tests %>% filter(Gene_name %in% protein_list$Gene_name)
-
-# Step 3: Write the filtered data to a new text file in the required format
-write.table(filtered_t_tests, file = "GSEA_input.txt", quote = FALSE, row.names = FALSE, sep = "\t")
-
-# Confirm the file has been saved correctly
-print("GSEA_input.txt has been created successfully!")
 
 ```
 
