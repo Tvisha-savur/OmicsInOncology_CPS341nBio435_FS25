@@ -379,38 +379,14 @@ To get an idea about the connectivity of the graph, create a histogram
 of the degrees in the graph.
 
 ```{r read in the exported graph data}
-#string_network <- read_delim("string_interactions.tsv", delim="\t")
-#print(string_network)
-#proteingraph <- graph_from_data_frame(string_network, directed = FALSE)
-#proteingraph <- simplify(proteingraph)
-
-
-# Load necessary libraries
-library(tidyverse)
-library(igraph)
-
-# Read in the exported graph data
 string_network <- read_delim("string_interactions.tsv", delim="\t")
-
-# Print column names to verify correct name for confidence scores
-print(colnames(string_network))
-
-# Convert 'combined_score' column to numeric (assuming this is the confidence score column)
-string_network <- string_network %>%
-  mutate(combined_score = as.numeric(combined_score))
-
-# Filter interactions based on confidence score (keeping only interactions with score ≥ 0.95)
-confidence_threshold <- 0.95
-string_network_filtered <- string_network %>% filter(combined_score >= confidence_threshold)
-
-# Convert to an igraph object
-proteingraph <- graph_from_data_frame(string_network_filtered, directed = FALSE)
-
-# Simplify the graph (removes multiple edges and loops)
+print(string_network)
+proteingraph <- graph_from_data_frame(string_network, directed = FALSE)
 proteingraph <- simplify(proteingraph)
 
-# Print basic graph summary
-print(proteingraph)
+
+
+
 
 ```
 
@@ -448,17 +424,31 @@ a subset.
 -   ...
 -   Use your clusters for further sub-clustering and subsequent
     enrichment analysis of the subclusters.
-    
-```{r}
-
-```
-    
-    
 -   Try to identify which functions, kinds of proteins, cellular
     localization, enzymatic activities are enriched.
 -   Put these enrichment in context of cancer. Did you find hallmarks?
     Important protein complexes/functions that play a role in cancer?
     And discuss this in your presentation.
+
+```{r}
+
+# Step 1: Read the list of 310 protein names
+protein_list <- read.delim("Grp6_clusterIDsFromCluster3.txt", header = FALSE)
+
+# Rename column for clarity (assuming there's one column)
+colnames(protein_list) <- c("Gene_name")
+
+# Step 2: Filter t_tests dataframe to keep only the proteins in the list
+filtered_t_tests <- t_tests %>% filter(Gene_name %in% protein_list$Gene_name)
+
+# Step 3: Write the filtered data to a new text file in the required format
+write.table(filtered_t_tests, file = "GSEA_input.txt", quote = FALSE, row.names = FALSE, sep = "\t")
+
+# Confirm the file has been saved correctly
+print("GSEA_input.txt has been created successfully!")
+
+```
+
 
 # Prepare a Presentation
 
